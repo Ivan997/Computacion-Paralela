@@ -1,0 +1,96 @@
+16310034 - Ivan Emmanuel Arredondo Martinez
+
+Problema a resolver (rama astronomica):
+EL actual programa hace referencia a la necesidad que se tiene en la astronomia, cada vez hay un aumento
+del volumen y calidad de los datos en astrofisica  y cosmologia que requiere nuevos metodos computacionales
+para asegurar resultados cientificos de alta calidad. Para analizar el enorme volumen de datos es necesario
+aplicar tecnicas como el paralelismo.
+
+Aunque el programa actual carece de exactitud o calidad con respecto a los valores otorgados a cada planeta,
+se puede observar claramente la mejora en el resultado obtenido en la simulacion tanto en tiempo de ejecucion
+como en fluides de cada elemento en la pantalla demostrando que el paralelismo en astronomia es una solucion
+muy viable. Para demostrar la igualdad de condiciones las clases "Principal_Secuencial" y "Principal_Concurrente"
+comparten las mismas clases de los planetas y del analisis de uso del CPU.
+____________________________________________________________________________________________________________________________________________________________________________________
+Algoritmo general utilizado en programa secuelcial y concurrente:
+ *Se dibuja el planeta obteniendo la imagen png correspondiente y escalandolo a un tamaño indicado.
+ *Se calcula el centro de la pantalla, ancho y largo de la pantalla entre 2.
+ (Separacion de planetas del sol)
+	-El sol se posiciona al centro, centro de la pantalla en X - ancho de imagen/2, 
+	centro de la pantalla en Y - alto de imagen/2
+	-Los planetas se inicializan indicando el tamaño del planeta, la velocidad nominal de las rotaciones (grados en radianes)
+	 y distancia de separacion, toman su pocicion tomando en cuenta el centro de la pantalla, ancho del planeta, el radio de 
+	los cuerpos celestes anteriores a este (tomando de referencia al sol) y la separacion que se desea entre estos y el planeta.
+ *La rotacion se calcula con respecto a la posicion actual del cuerpo celeste, especificando los grados en radianes que se desea 
+  rotar el cuerpo celeste.
+ *La traslacion se crea usando la formula matematica del circulo x²+y²=r² la funcion f(x) quedo de la siguiente manera: 
+  f(x) = raiz(r²-x), dando un punto en y por cada punto en x.
+ *Analizador de sistema, se importa la clase de java "OperatingSystemMXBean" la cual cuenta con una funcion que retorna 
+  en porcentaje el valor del uso del cpu, este se imprime en pantalla, parte superior Izquierda.
+ *Estado de los hilos, se enlistan los planetas, estos se iluminan con color verde segun esten activos y se apagan si se desactivan 
+  indicando la posicion exacta (lo mas posible) de cada hilo o del hilo principal, segun sea el caso.
+ *Tiempo de ejecucion, al presionar el boton de "START" se toma el tiempo actual de la computadora en milis, al completar las 
+  rotaciones indicadas se detienen los cuerpos celestes y se toma el tiempo de la computadora en milis, para tener el tiempo total 
+  de ejecucion del programa se ejecuta tTotal = tInicial - tFinal, dandonos el tiempo total en milisegundos, despues se convierte 
+  dividiendo en minutos dividiendo entre 60000 y 1000 respectivamente.
+ =(Control del programa)
+ *Control de velocidad de rotaciones global (afecta a todos los cuerpos celestes), con los botones "+R" y "-R" se incrementa 
+  la velocidad de las rotaciones, siendo 0 la velocidad minima de rotacion y 10 la velocidad maxima.
+ *Control de velocidad de tralaciones global (afecta a todos los cuerpos celestes), con los botones "+T" y "-T" se incrementa 
+  la velocidad de las traslaciones en los planetas, siendo 0 la velocidad minima de traslacion y 10 la velocidad maxima.
+ *Control de traslaciones al rededor del sol de la tierra, se modifica la referencia de cuantas vueltas al rededor del sol debe 
+  de dar la tierra para que el programa llegue al final de su ejecucion, cantidad minima de rotaciones 0 (no recomendado) y maxima
+  de 10 rotaciones al rededor del sol.
+ *Boton de "START" este boton fija los controles para que las variables de velocidad y rotaciones no se modifiquen durante la ejecucion
+  del programa, actualiza las velocidades de cada planeta, tanto de traslacion como rotacion, inicia el contador de tiempo de ejecucion
+  y activa el bucle que dara vida a cada planeta.
+____________________________________________________________________________________________________________________________________________________________________________________
+Implementacion Secuencial:
+ *Se genero una clase Padre "Planeta", dicha clase contiene las funciones principales de los que dependen todos los planetas, Rotacion(),
+  Traslacion(), pintar(). De dicha clase heredaron todos los cuerpos celestes (Desde el sol hasta jupiter) cada uno con su respectivo constructor, 
+  donde recibe los valores del JFrame principal, JPanel que se modificara, y la velocidad nominal de rotacion, ademas de que en el mismo contructor 
+  se configura la posicion donde aparecera el planeta y el tamaño que tendra, cada planeta sobreescribe la funcion pintar(), donde se calcula cada 
+  posicion del cuerpo celeste y se ejecutan las funciones de rotar y trasladar (El sol es el unico que no se traslada en la pantalla, solo rota).
+ *Se genero una clase Publica "AnalizadordeSistema" con la finalidad de gestionar el analisis del CPU y de mostrar el estado de cada hilo.
+ *Se genero una clase Publica "Principal_Secuencial" esta clase extiente de JFrame y contiene la funcion main(String[] arg){} que otorga vida al programa,
+  aqui se crean objetos de las clases de cada planeta (Sol, Mercurio, VEnus, Tierra, Marte y Jupiter) y de analizador de sistema. en el constructor de la 
+  clase se crean y muestran todos los controles de mando (incrementa velocidad de rotacion y traslacion, ademas de incrementar las traslaciones del planeta tierra),
+  en la funcion main se encuentra el bucle principal, es infinito porque debe durar en ciclo todo el tiempo que la ventana se este visualizando, hay otros dos ciclos 
+  anidados, uno lleva el conteo de las traslaciones del planeta tierra, es el que controla el ciclo de los demas planetas, por lo tanto al llegarse al limite se debe 
+  pausar la ejecucion de cada planeta alterando el valor booleano de iniciar a false, antes de cada pintarplaneta() se llama a una funcion de analizador de sistema 
+  "imprime_estado_planeta("planeta",1 ó 0), aqui es donde se enciende o se apaga la marca la cual indica el estado actual del hilo de ejecucion secuencial, se ejecuta
+  este codigo una vez para mostrar los planetas y despues se queda en un ciclo de espera, este esta revisando constantemente el valor booleano de inicio la cual 
+  indicara cuando empezar o terminar el ciclo, true o false respectivamente, justo despues de este ciclo viene una condicion if, la cual determina si es la primer 
+  ejecucion despues de presionar el start activa el inicio del temporizador, despues de llegar al limite de las traslaciones de la tierra sale al bucle general y se 
+  obtiene el tiempo final de ejecucion donde se calcula el tiempo total, los minutos, los segundos y los milisegundos totales de la ejecucion mostrandolos en la pantalla
+  de color naranja, retornando los valores a estado inicial logrando hacer que vuelva a esperar el boton de START.
+____________________________________________________________________________________________________________________________________________________________________________________
+Implementacion Concurrente:
+En esta implementacion se tuvo que hacer una modificacion mayor ya que se tuvo que crear una clase que administrara y ejecutara cada hilo.
+(Se comparten las siguientes clases con la Implementacion Secuencial: padre Planeta, las clases hijas Sol, Mercurio, Venus, Tierra, Marte y Jupiter, y la clase Analizador de sistema).
+ *Se genero una clase Padre "Planeta", dicha clase contiene las funciones principales de los que dependen todos los planetas, Rotacion(),
+  Traslacion(), pintar(). De dicha clase heredaron todos los cuerpos celestes (Desde el sol hasta jupiter) cada uno con su respectivo constructor, 
+  donde recibe los valores del JFrame principal, JPanel que se modificara, y la velocidad nominal de rotacion, ademas de que en el mismo contructor 
+  se configura la posicion donde aparecera el planeta y el tamaño que tendra, cada planeta sobreescribe la funcion pintar(), donde se calcula cada 
+  posicion del cuerpo celeste y se ejecutan las funciones de rotar y trasladar (El sol es el unico que no se traslada en la pantalla, solo rota).
+ *Se genero una clase Publica "AnalizadordeSistema" con la finalidad de gestionar el analisis del CPU y de mostrar el estado de cada hilo. 
+ *Se genero una clase publica "Paneldecontrol" la cual se encarga de generar los botones que controlan las variables de velocidad en rotacion y traslacion globales y la cantidad de 
+  traslaciones del planeta tierra alrededor del sol, ademas del boton de "START" que iniciara el programa.
+	**Nota: esta clase fue solo implementada aqui porque en la implementacion secuencial se mostraba solo una vez de forma natural por el programa, ya que cuenta con 1 solo hilo,
+		sin embargo en el concurrente se dejaba en la funcion "Hilos" se imprimia el panel de control 1 vez por cada hilo llegando a tener 7 paneles de control sobrepuestos
+		uno sobre otro simultaneamente, por lo que el "control" del programa se perdia por completo.
+ *Se genero una clase publica "Hilos", la cual funciona como la clase que tiene todos los objetos a utilizar en el programa, cada planeta, panel de control y analizador de sistema 
+  se encuentra ahi, su funcion principal es tener los objetos en un solo lugar donde poder modificarlos y hacer uso de sus funciones y variables.
+ *Se genero una clase publica "Principal_Concurrente" que extiende de thread, aqui se encuentra la funcion main la cual se debe ejecutar para hacer funcionar el programa, aqui se 
+  ejecuto un algoritmo diferente para hacer funcionar cada hilo, ya que cada planeta debe ser independiente uno del otro, por lo que se generarion 7 objetos de la clase Principal_Concurrente, 
+  uno por planeta y el analizador de cpu, a cada objeto se le dio un nombre y una bandera la cual al colocar hilo.start() verificaran su bandera y activaran el hilo correspondiente gracias a 
+  un switch-case dentro de la funcion run(), cada planeta tiene la misma estructura de ciclos que el programa secuencial,hilos anidados y uno que depende directamente del valor de la variable 
+  boolean inicio, el planeta tierra es el que tiene mas funciones en su seccion ya que este se encarga de activar, desactivar y calcular los tiempos de ejecucion del programa ademas de la 
+  activacion de la pausa general de los hilos (variable boolean inicio).
+____________________________________________________________________________________________________________________________________________________________________________________
+Main Programa Secuencial: Principal_Secuencial
+Main Programa Concurrente: Principal_Concurrente
+
+Codigo para compilar en terminal:
+javac AnalizadordeSistema.java Hilos.java Jupiter.java Marte.java Mercurio.java PaneldeControl.java Planetas.java Principal_Concurrente.java Principal_Secuencial.java Sol.java Tierra.java Venus.java
+
