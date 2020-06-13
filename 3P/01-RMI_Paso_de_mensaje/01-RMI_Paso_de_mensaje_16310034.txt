@@ -1,0 +1,30 @@
+16310034 - Ivan Emmanuel Arredondo Martinez
+
+Para esta practica use 3 computadoras, 2 reales y una virtual, la computadora con UbuntuStudio la coloque de servidor, para poder hacer 
+funcionar el programa con el codigo otorgado se tuvo que renombrar el nombre del host, ya que si este se dejaba ni cambios, rebotaba todas 
+las solicitudes de otras computadoras de la red LAN ademas de que aparentemente el firewall de este sistema operativo entorpecia a la 
+comunicacion en red, de forma local no hubo ningun problema, incluso se podia hacer llamar la funcion remota por ip de localhost o por la 
+ip que proporciona el router y funcionaba igual.
+
+Para permitir una mayor comodidad de ejecucion con diferentes ip, la clase "MiClaseRemota" recibe dos argumentos, el primero es la ip que 
+se desea poner el servidor y el segundo el puerto, esto por el hecho de que se debe renombrar el host con la ip de la red LAN que se tiene 
+actualmente, la clase "MiClienteRMI" sigue sin cambios en el momento de la ejecucion, se modifico la interfaz para que el metodo "miMetodo1" 
+reciba un texto el cual pueda diferenciar de varias computadoras cuando estas llamen a la clase remota.
+
+EL cliente debe tener el archivo MiClaseRemota_Stub.class en su carpeta raiz para que funcione correctamente
+Lineas de comando para lanzar el servidor:
+*Terminal #1:
+javac MiInterfazRemota.java
+javac MiClaseRemota.java
+rmic -d . MiClaseRemota
+rmiregistry 1234
+
+*Terminal #2:
+java MiClaseRemota "IP" 1234
+
+lineas de comando para lanzar el cliente:
+*Terminal #1:
+javac MiInterfazREmota.java
+javac MiClienteRMI.java
+java MiClienteRMI "IP" 1234
+
