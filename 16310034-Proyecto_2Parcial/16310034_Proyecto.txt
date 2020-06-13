@@ -1,6 +1,6 @@
 16310034 - Ivan Emmanuel Arredondo Martinez
 
-Problema a resolver (rama astronomica):
+Problema a resolver (rama astronomica):::::
 EL actual programa hace referencia a la necesidad que se tiene en la astronomia, cada vez hay un aumento
 del volumen y calidad de los datos en astrofisica  y cosmologia que requiere nuevos metodos computacionales
 para asegurar resultados cientificos de alta calidad. Para analizar el enorme volumen de datos es necesario
