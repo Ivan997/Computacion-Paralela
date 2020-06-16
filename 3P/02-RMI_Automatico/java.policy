@@ -1,0 +1,6 @@
+grant{
+    permission java.security.AllPermission;
+    permission java.net.SocketPermission "localhost:1234", "listen,connect,resolve";
+    permission java.lang.RuntimePermission "setFactory";
+    
+};

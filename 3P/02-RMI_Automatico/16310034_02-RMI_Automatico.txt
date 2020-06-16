@@ -1,0 +1,25 @@
+16310034-Ivan Emmanuel Arredondo Martinez
+
+En esta practica se comunican por medio de rmi se puede ejecutar una aplicacion desde otra computadora, con la diferencia 
+de la practica anterior, aqui el programa no esta todo el tiempo esperando a que haya un cliente, al levatarse el servidor 
+te regresa a la terminal, sin embargo cuando un cliente necesita del servidor, este se levanta y atiende al cliente.
+
+Las mayores complicaciones que se tuvieron con esta practica es que el servidor le negaba el servicio la computadora externa, 
+evitando efectuar la conexion, despues de mucho intentar, entontre la solucion en modificar el archivo "/etc/hosts" dandole 
+la ip de la red LAN a la computadora, despues de esta accion toda computadora externa, tanto la ASUS como la virtual 
+corriendo en esta misma pudieron efectuar correctamente la conexion con el servidor, esto se ve reflejadp en las fotos y 
+capturas de pantalla.
+
+Comandos terminal Servidor
+Terminal #1:
+ javac MiInterfazRemota.java
+ javac MiClaseRemota2.java
+ rmic -d . MiClaseRemota2
+ rmiregistry 1234 &
+ rmid -J-Djava.security.policy=java.policy
+Terminal #2:
+ java -Djava.security.policy=java.policy MiClaseRemota2 192.168.100.23 1234
+
+Comandos terminal cliente
+ javac MiClienteRMI2.java
+ java MiClienteRMI2 192.168.100.23 1234
